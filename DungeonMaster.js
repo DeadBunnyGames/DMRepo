@@ -20,7 +20,6 @@ else { alert("Your browser doesn't support <canvas>."); }
 
 function update()
 {
-	//hello
 }
 
 
