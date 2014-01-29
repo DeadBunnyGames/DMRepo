@@ -57,7 +57,7 @@ function createWorld(x, y)
 createWorld(50, 50);
 
 width = map.length * cellWidth;
-height = map[0].length * cellHeight;
+height = map[0].length * cellHeight + 200;
 
 canvasElement.width = width;
 canvasElement.height = height;
@@ -68,7 +68,7 @@ function update()
         {
                 if(map[getMapX(mx)][getMapY(my)].type > 0)
                 {
-                        map[getMapX(mx)][getMapY(my)].type = 2
+                    map[getMapX(mx)][getMapY(my)].type = 2;
                 }
         }
 }
@@ -94,6 +94,7 @@ function getMapX(pos)
 		{
                 if ( pos >= i*cellWidth && pos <= (i+1)*cellWidth )
 				{
+					if(pos < height - 200)
                         return i;
                 }
         }
@@ -133,3 +134,4 @@ function stopClick()
 canvasElement.addEventListener("mousemove", getPOS);
 canvasElement.addEventListener("mousedown", getClick);
 canvasElement.addEventListener("mouseup", stopClick);
+canvasElement.addEventListener("mouseout", stopClick);
