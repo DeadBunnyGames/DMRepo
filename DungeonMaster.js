@@ -15,6 +15,30 @@ var clicked = false;
 var mx = 0;
 var my = 0;
 
+var BackLeft = new Image();
+BackLeft.src = "src/BackLeft.png";
+var BackRight = new Image();
+BackRight.src = "src/BackRight.png";
+var BackWall = new Image();
+BackWall.src = "src/BackWall.png";
+
+var FrontLeft = new Image();
+FrontLeft.src = "src/FrontLeft.png";
+var FrontRight = new Image();
+FrontRight.src = "src/FrontRight.png";
+var FrontWall = new Image();
+FrontWall.src = "src/FrontWall.png";
+
+var LeftWall = new Image();
+LeftWall.src = "src/LeftWall.png";
+var RightWall = new Image();
+RightWall.src = "src/RightWall.png";
+
+var Floor = new Image();
+Floor.src = "src/Floor.png";
+var DoorWay = new Image();
+DoorWay.src = "src/DoorWay.png";
+
 if(canvasElement.getContext)
 {
     ctx = canvasElement.getContext("2d");
@@ -73,9 +97,9 @@ function createWorld(x, y)
         {
             //Start Room
             if((i>=(x/2)-(HQSize/2) && i<=(x/2)+(HQSize/2)) && (j>=(y/2)-(HQSize/2) && j<=(y/2)+(HQSize/2)))
-                map[i][j] = new Cell(i, j, 0, false);
+                map[i][j] = new Cell(i, j, "FrontWall", false);
             else //Blackness
-                map[i][j] = new Cell(i, j, 1, true);
+                map[i][j] = new Cell(i, j, "Floor", true);
         }
     }
 }
@@ -98,9 +122,9 @@ function update()
     {
 		if(my < height-200)
 		{
-			if(map[getMapX(mx)][getMapY(my)].type > 0)
+			if(map[getMapX(mx)][getMapY(my)].type != "FrontWall")
 			{
-				map[getMapX(mx)][getMapY(my)].type = 2;
+				map[getMapX(mx)][getMapY(my)].type = "BackLeft";
 			}
 		}
     }
@@ -125,7 +149,20 @@ function draw()
             if(map[i][j].type == 0) { ctx.fillStyle = "white"; }
             else if(map[i][j].type == 1) { ctx.fillStyle = "black"; }
             else if(map[i][j].type == 2) { ctx.fillStyle = "green"; }//added green to tell where I clicked
-            ctx.fillRect(i*cellWidth, j*cellHeight, cellWidth, cellHeight);
+            
+            else if(map[i][j].type == "BackLeft") { source = BackLeft; }
+            else if(map[i][j].type == "BackRight") { source = BackRight; }
+			else if(map[i][j].type == "BackWall") { source = BackWall; }
+			else if(map[i][j].type == "FrontLeft") { source = FrontLeft; }
+            else if(map[i][j].type == "FrontRight") { source = FrontRight; }
+			else if(map[i][j].type == "FrontWall") { source = FrontWall; }
+			else if(map[i][j].type == "LeftWall") { source = LeftWall; }
+			else if(map[i][j].type == "RightWall") { source = RightWall; }
+			else if(map[i][j].type == "Floor") { source = Floor; }
+			else if(map[i][j].type == "DoorWay") { source = DoorWay; }
+            
+            ctx.drawImage(source, i*cellWidth, j*cellHeight);
+            //ctx.fillRect(i*cellWidth, j*cellHeight, cellWidth, cellHeight);
         }
     }
 }
