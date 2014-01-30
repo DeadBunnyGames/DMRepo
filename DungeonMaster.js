@@ -15,12 +15,12 @@ var my = 0;
 
 if(canvasElement.getContext)
 {
-        ctx = canvasElement.getContext("2d");
+    ctx = canvasElement.getContext("2d");
 
-        setInterval(function() {
-                update();
-                draw();
-        }, 1000/FPS);
+    setInterval(function() {
+        update();
+        draw();
+    }, 1000/FPS);
 }
 else { alert("Your browser doesn't support <canvas>."); }
 
@@ -40,18 +40,18 @@ function Cell(x, y, type, collide)
 
 function createWorld(x, y)
 {
-        for(var i=0; i<x; i++)
+    for(var i=0; i<x; i++)
+    {
+        map[i] = [];
+        for(var j=0; j<y; j++)
         {
-                map[i] = [];
-                for(var j=0; j<y; j++)
-                {
-                        //Start Room
-                        if((i>=(x/2)-(HQSize/2) && i<=(x/2)+(HQSize/2)) && (j>=(y/2)-(HQSize/2) && j<=(y/2)+(HQSize/2)))
-                                map[i][j] = new Cell(i, j, 0, false);
-                        else //Blackness
-                                map[i][j] = new Cell(i, j, 1, true);
-                }
+            //Start Room
+            if((i>=(x/2)-(HQSize/2) && i<=(x/2)+(HQSize/2)) && (j>=(y/2)-(HQSize/2) && j<=(y/2)+(HQSize/2)))
+                map[i][j] = new Cell(i, j, 0, false);
+            else //Blackness
+                map[i][j] = new Cell(i, j, 1, true);
         }
+    }
 }
 
 createWorld(50, 50);
@@ -64,71 +64,71 @@ canvasElement.height = height;
 
 function update()
 {
-        if(clicked == true)
+    if(clicked == true)
+    {
+        if(map[getMapX(mx)][getMapY(my)].type > 0)
         {
-                if(map[getMapX(mx)][getMapY(my)].type > 0)
-                {
-                    map[getMapX(mx)][getMapY(my)].type = 2;
-                }
+            map[getMapX(mx)][getMapY(my)].type = 2;
         }
+    }
 }
 
 function draw()
 {
-        ctx.clearRect(0, 0, width, height);
-        
-        for(var i=0; i<map.length; i++)
+    ctx.clearRect(0, 0, width, height);
+    
+    for(var i=0; i<map.length; i++)
+    {
+        for(var j=0; j<map[i].length; j++)
         {
-                for(var j=0; j<map[i].length; j++)
-                {
-                        if(map[i][j].type == 0) { ctx.fillStyle = "white"; }
-                        else if(map[i][j].type == 1) { ctx.fillStyle = "black"; }
-                        else if(map[i][j].type == 2) { ctx.fillStyle = "green"; }//added green to tell where I clicked
-                        ctx.fillRect(i*cellWidth, j*cellHeight, cellWidth, cellHeight);
-                }
+            if(map[i][j].type == 0) { ctx.fillStyle = "white"; }
+            else if(map[i][j].type == 1) { ctx.fillStyle = "black"; }
+            else if(map[i][j].type == 2) { ctx.fillStyle = "green"; }//added green to tell where I clicked
+            ctx.fillRect(i*cellWidth, j*cellHeight, cellWidth, cellHeight);
         }
+    }
 }
 function getMapX(pos)
 {
-        for(var i=0; i<map.length; i++)
+    for(var i=0; i<map.length; i++)
+	{
+        if ( pos >= i*cellWidth && pos <= (i+1)*cellWidth )
 		{
-                if ( pos >= i*cellWidth && pos <= (i+1)*cellWidth )
-				{
-					if(pos < height - 200)
-                        return i;
-                }
+			if(pos < height - 200)
+                return i;
         }
-        return;
+    }
+    return;
 }
 
 function getMapY(pos)
 {
-        for(var j=0; j<map.length; j++)
+    for(var j=0; j<map.length; j++)
+	{
+        if ( pos >= j*cellHeight && pos <= (j+1)*cellHeight )
 		{
-                if ( pos >= j*cellHeight && pos <= (j+1)*cellHeight )
-				{
-                        return j;
-                }
+            return j;
         }
-        return;
+    }
+    return;
 }
 
 function getPOS(e)
 {
-        var evt = e || window.event;
-        mx = evt.pageX - 8;//these needed to be offset it's checking the page x and y not the canvas
-        my = evt.pageY - 8;
+    var evt = e || window.event;
+    mx = evt.pageX - ctx.canvas.offsetLeft;
+    my = evt.pageY - ctx.canvas.offsetTop;
 }
 function getClick(e)
 {
-        var evt = e || window.event;
-        mx = evt.pageX - 8;//these needed to be offset it's checking the page x and y not the canvas
-        my = evt.pageY - 8;
-        clicked = true;
+    var evt = e || window.event;
+    mx = evt.pageX - ctx.canvas.offsetLeft;
+    my = evt.pageY - ctx.canvas.offsetTop;
+    clicked = true;
 }
 function stopClick()
 {
-        clicked = false;
+    clicked = false;
 }
 
 canvasElement.addEventListener("mousemove", getPOS);
