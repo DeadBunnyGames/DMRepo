@@ -46,7 +46,7 @@ function Menu(x, y, width, height, items)
 
 function createMenu()
 {
-	menuBar[0] = new Menu(0, width, height-200, 200, ["Construction"]);
+	menuBar[0] = new Menu(0, width, height-200, 200, ["Construction", "Suck It"]);
 	menuBar[0][0] = new Menu(10, 170, height-170, 130, ["Traps", "Monsters", "Building", "Sell", "Back"]);
 }
 
@@ -89,7 +89,8 @@ canvasElement.width = width;
 canvasElement.height = height;
 
 createMenu();
-menuBarText[0] = menuBar[0].items[0];
+for(var i=0; i< menuBar[0].items.length; i++)
+	menuBarText[i] = menuBar[0].items[0];
 
 function update()
 {
@@ -114,7 +115,7 @@ function draw()
 	ctx.fillStyle = "black";
 	ctx.font="20px Consolas";
 
-	for(var i=0; i<menuBar[0][0].items.length; i++)
+	for(var i=0; i<menuBarText.length; i++)
 		ctx.fillText(menuBarText[i], menuBar[0].x+20 + (150)*i, menuBar[0].y+100);
 	
     for(var i=0; i<map.length; i++)
@@ -167,15 +168,20 @@ function getClick(e)
     mx = evt.pageX - ctx.canvas.offsetLeft;
     my = evt.pageY - ctx.canvas.offsetTop;
 
-	console.log(menuBar[0].x + ", " + menuBar[0].y + ", " + menuBar[0].width + ", " + menuBar[0].height);
 	if(mx > menuBar[0].x && mx < menuBar[0].x + menuBar[0].width && my > menuBar[0].y && my < menuBar[0].y + menuBar[0].height)
 	{
 		if(mx > menuBar[0].x && mx < menuBar[0].x + 150 && my > menuBar[0].y && my < menuBar[0].y+200)
 		{
 			for(var i=0; i<menuBar[0][0].items.length; i++)
 			{
-				console.log(menuBar[0][0].items.length + ", " + menuBar[0][0].items[i] + ", " + menuBarText[i]);
 				menuBarText[i] = menuBar[0][0].items[i];
+			}
+		}
+		else if(mx > menuBar[0].x && mx < menuBar[0].x + (150*2) && my > menuBar[0].y && my < menuBar[0].y+200)
+		{
+			for(var i=0; i<menuBar[1][0].items.length; i++)
+			{
+				menuBarText[i] = menuBar[1][0].items[i];
 			}
 		}
 	}
