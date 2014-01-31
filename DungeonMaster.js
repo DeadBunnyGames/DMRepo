@@ -14,6 +14,8 @@ var HQSize = 4;
 var clicked = false;
 var mx = 0;
 var my = 0;
+var TextSpacing = 150;
+var Drawing = "Floor";
 
 var BackLeft = new Image();
 BackLeft.src = "src/BackLeft.png";
@@ -75,6 +77,7 @@ function createMenu()
 {
 	menuBar[0] = new Menu(0, width, height-200, 200, ["Construction", "Suck It"]);
 	menuBar[0][0] = new Menu(10, 170, height-170, 130, ["Traps", "Monsters", "Building", "Sell", "Back"]);
+	menuBar[0][1] = new Menu(10, 170, height-170, 130, ["Penis", "Pickle"]);
 }
 
 function Cell(x, y, type, collide)
@@ -136,7 +139,7 @@ canvasElement.height = height;
 
 createMenu();
 for(var i=0; i< menuBar[0].items.length; i++)
-	menuBarText[i] = menuBar[0].items[0];
+	menuBarText[i] = menuBar[0].items[i];
 
 function update()
 {
@@ -144,9 +147,9 @@ function update()
     {
 		if(my < height-200)
 		{
-			if(map[getMapX(mx)][getMapY(my)].type == "Rock")
+			if(map[getMapX(mx)][getMapY(my)].type == "Rock")//To Prevent "re-colouring"
 			{
-				map[getMapX(mx)][getMapY(my)].type = "Floor";
+				map[getMapX(mx)][getMapY(my)].type = Drawing;
 			}
 		}
     }
@@ -161,17 +164,19 @@ function draw()
 	ctx.fillStyle = "black";
 	ctx.font="20px Consolas";
 
+	if(menuBarText.length >= 4)
+	{
+		ctx.font="15px Consolas";
+		TextSpacing = 125;
+	}
 	for(var i=0; i<menuBarText.length; i++)
-		ctx.fillText(menuBarText[i], menuBar[0].x+20 + (150)*i, menuBar[0].y+100);
+		ctx.fillText(menuBarText[i], menuBar[0].x+20 + (TextSpacing)*i, menuBar[0].y+100);
 	
     for(var i=0; i<map.length; i++)
     {
         for(var j=0; j<map[i].length; j++)
         {
-            if(map[i][j].type == 0) { ctx.fillStyle = "white"; }
-            else if(map[i][j].type == 1) { ctx.fillStyle = "black"; }
-            else if(map[i][j].type == 2) { ctx.fillStyle = "green"; }//added green to tell where I clicked
-            
+            if(map[i][j].type == "Rock") { source = Rock; }
             else if(map[i][j].type == "BackLeft") { source = BackLeft; }
             else if(map[i][j].type == "BackRight") { source = BackRight; }
 			else if(map[i][j].type == "BackWall") { source = BackWall; }
@@ -182,10 +187,8 @@ function draw()
 			else if(map[i][j].type == "RightWall") { source = RightWall; }
 			else if(map[i][j].type == "Floor") { source = Floor; }
 			else if(map[i][j].type == "DoorWay") { source = DoorWay; }
-			else if(map[i][j].type == "Rock") { source = Rock; }
             
             ctx.drawImage(source, i*cellWidth, j*cellHeight);
-            //ctx.fillRect(i*cellWidth, j*cellHeight, cellWidth, cellHeight);
         }
     }
 }
@@ -228,9 +231,18 @@ function getClick(e)
     mx = evt.pageX - ctx.canvas.offsetLeft;
     my = evt.pageY - ctx.canvas.offsetTop;
 
+	//This is for the "Main" menu detection
 	if(mx > menuBar[0].x && mx < menuBar[0].x + menuBar[0].width && my > menuBar[0].y && my < menuBar[0].y + menuBar[0].height)
 	{
-		if(mx > menuBar[0].x && mx < menuBar[0].x + 150 && my > menuBar[0].y && my < menuBar[0].y+200)
+		if(menuBarText[0] == "Traps")
+		{
+			if(mx > menuBar[0].x && mx < menuBar[0].x+150 && my > menuBar[0].y && my < menuBar[0].y+200)
+				Drawing = "FrontWall";
+			else if(mx > menuBar[0].x+150 && mx < menuBar[0].x + (150*2) && my > menuBar[0].y && my < menuBar[0].y+200)
+				Drawing = "BackWall";
+		}
+	
+		else if(mx > menuBar[0].x && mx < menuBar[0].x + 150 && my > menuBar[0].y && my < menuBar[0].y+200)
 		{
 			for(var i=0; i<menuBar[0][0].items.length; i++)
 			{
@@ -239,9 +251,9 @@ function getClick(e)
 		}
 		else if(mx > menuBar[0].x && mx < menuBar[0].x + (150*2) && my > menuBar[0].y && my < menuBar[0].y+200)
 		{
-			for(var i=0; i<menuBar[1][0].items.length; i++)
+			for(var i=0; i<menuBar[0][1].items.length; i++)
 			{
-				menuBarText[i] = menuBar[1][0].items[i];
+				menuBarText[i] = menuBar[0][1].items[i];
 			}
 		}
 	}
