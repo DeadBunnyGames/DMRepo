@@ -39,6 +39,9 @@ Floor.src = "src/Floor.png";
 var DoorWay = new Image();
 DoorWay.src = "src/DoorWay.png";
 
+var Rock = new Image();
+Rock.src = "src/Rock.png";
+
 if(canvasElement.getContext)
 {
     ctx = canvasElement.getContext("2d");
@@ -97,9 +100,28 @@ function createWorld(x, y)
         {
             //Start Room
             if((i>=(x/2)-(HQSize/2) && i<=(x/2)+(HQSize/2)) && (j>=(y/2)-(HQSize/2) && j<=(y/2)+(HQSize/2)))
-                map[i][j] = new Cell(i, j, "FrontWall", false);
+			{
+				if((i>=(x/2)-(HQSize/2) && i<=(x/2)+((HQSize/2)-HQSize)) && (j>=(y/2)-(HQSize/2) && j<=(y/2)+((HQSize/2)-HQSize)))
+					map[i][j] = new Cell(i, j, "BackLeft", true);
+				else if((i>=(x/2)-((HQSize/2)-HQSize) && i<=(x/2)+(HQSize/2)) && (j>=(y/2)-(HQSize/2) && j<=(y/2)+((HQSize/2)-HQSize)))
+					map[i][j] = new Cell(i, j, "BackRight", true);
+				else if((i>=(x/2)-((HQSize/2)-HQSize) && i<=(x/2)+(HQSize/2)) && (j>=(y/2)-((HQSize/2)-HQSize) && j<=(y/2)+(HQSize/2)))
+					map[i][j] = new Cell(i, j, "FrontRight", true);
+				else if((i>=(x/2)-(HQSize/2) && i<=(x/2)+((HQSize/2)-HQSize)) && (j>=(y/2)-((HQSize/2)-HQSize) && j<=(y/2)+(HQSize/2)))
+					map[i][j] = new Cell(i, j, "FrontLeft", true);
+				else if((i>=(x/2)-(HQSize/2) && i<=(x/2)+(HQSize/2)) && (j>=(y/2)-(HQSize/2) && j<=(y/2)+((HQSize/2)-HQSize)))
+					map[i][j] = new Cell(i, j, "BackWall", true);
+				else if((i>=(x/2)-(HQSize/2) && i<=(x/2)+(HQSize/2)) && (j>=(y/2)-((HQSize/2)-HQSize) && j<=(y/2)+(HQSize/2)))
+					map[i][j] = new Cell(i, j, "FrontWall", true);
+				else if((i>=(x/2)-(HQSize/2) && i<=(x/2)+((HQSize/2)-HQSize)) && (j>=(y/2)-(HQSize/2) && j<=(y/2)+(HQSize/2)))
+					map[i][j] = new Cell(i, j, "LeftWall", true);
+				else if((i>=(x/2)-((HQSize/2)-HQSize) && i<=(x/2)+(HQSize/2)) && (j>=(y/2)-(HQSize/2) && j<=(y/2)+(HQSize/2)))
+					map[i][j] = new Cell(i, j, "RightWall", true);
+				else
+					map[i][j] = new Cell(i, j, "Floor", false);
+			}
             else //Blackness
-                map[i][j] = new Cell(i, j, "Floor", true);
+                map[i][j] = new Cell(i, j, "Rock", true);
         }
     }
 }
@@ -122,9 +144,9 @@ function update()
     {
 		if(my < height-200)
 		{
-			if(map[getMapX(mx)][getMapY(my)].type != "FrontWall")
+			if(map[getMapX(mx)][getMapY(my)].type == "Rock")
 			{
-				map[getMapX(mx)][getMapY(my)].type = "BackLeft";
+				map[getMapX(mx)][getMapY(my)].type = "Floor";
 			}
 		}
     }
@@ -160,6 +182,7 @@ function draw()
 			else if(map[i][j].type == "RightWall") { source = RightWall; }
 			else if(map[i][j].type == "Floor") { source = Floor; }
 			else if(map[i][j].type == "DoorWay") { source = DoorWay; }
+			else if(map[i][j].type == "Rock") { source = Rock; }
             
             ctx.drawImage(source, i*cellWidth, j*cellHeight);
             //ctx.fillRect(i*cellWidth, j*cellHeight, cellWidth, cellHeight);
